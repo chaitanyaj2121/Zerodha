@@ -38,3 +38,17 @@ code {
   border-radius: 10px;
   border: none;
 }
+
+.about-page-hero-left {
+  margin-right: 1rem;
+  font-size: 1rem;
+  font-weight: 450;
+}
+.about-page-hero-right {
+  margin-left: 1rem;
+  font-size: 1rem;
+  font-weight: 450;
+}
+.text-decoration-none {
+  text-decoration: none !important;
+}
