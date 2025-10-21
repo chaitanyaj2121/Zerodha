@@ -8,6 +8,7 @@ import Pricing from "./landing_page/pricing/PricingPage";
 import Support from "./landing_page/support/SupportPage";
 import Navbar from "./landing_page/Navbar";
 import Footer from "./landing_page/Footer";
+import NotFound from "./landing_page/NotFound";
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
           <Route path="/product" element={<Product />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/support" element={<Support />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </Router>
