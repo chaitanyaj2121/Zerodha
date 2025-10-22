@@ -21,7 +21,7 @@ const Menu = () => {
         <ul>
           <li>
             <Link
-              to="/dashboard"
+              to="/"
               style={{ textDecoration: "none" }}
               onClick={() => handleMenuClick(0)}
             >
