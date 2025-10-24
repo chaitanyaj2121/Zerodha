@@ -13,6 +13,7 @@ const uri = process.env.MONGO_URL;
 
 const HoldingsModel = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
+const { OrdersModel } = require("./model/OrdersModel");
 
 app.get("/allHoldings", async (req, res) => {
   let allHoldings = await mongoose.connection.db
@@ -32,6 +33,17 @@ app.get("/allPositions", async (req, res) => {
 
 app.get("/", (req, res) => {
   res.send("Home Page");
+});
+
+app.post("/newOrder", async (req, res) => {
+  const newOrder = new OrdersModel({
+    name: req.body.name,
+    qty: req.body.qty,
+    price: req.body.price,
+    mode: req.body.mode,
+  });
+  await newOrder.save();
+  res.json({ message: "Order created successfully" });
 });
 
 app.listen(PORT, () => {
