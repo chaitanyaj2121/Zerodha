@@ -4,40 +4,39 @@ const bcrypt = require("bcryptjs");
 
 module.exports.Signup = async (req, res) => {
   try {
-    const { email, password, username, createdAt } = req.body;
+    const { email, password, username } = req.body;
 
-    // 1️⃣ Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.json({ message: "User already exists", success: false });
     }
 
-    // 2️⃣ Hash password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // 3️⃣ Create new user
     const user = await User.create({
       email,
-      password: hashedPassword,
+      password,
       username,
-      createdAt,
     });
 
-    // 4️⃣ Create JWT token
     const token = createSecretToken(user._id);
 
-    // 5️⃣ Send token in cookie (secure way)
+    // ✅ Fix cookie settings
     res.cookie("token", token, {
       withCredentials: true,
-      httpOnly: true, // prevents XSS attacks
-      sameSite: "strict", // optional but good
+      httpOnly: false, // ✅ Changed to false so JavaScript can read it
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: "lax",
+      path: "/",
     });
 
-    // 6️⃣ Send success response
     res.json({
       message: "User signed up successfully",
       success: true,
-      user,
+      token, // ✅ Also send token in response
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -45,30 +44,56 @@ module.exports.Signup = async (req, res) => {
   }
 };
 
-module.exports.Login = async (req, res, next) => {
+module.exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
-      return res.json({ message: "All fields are required" });
+      return res.json({ success: false, message: "All fields are required" });
     }
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({ message: "Incorrect password or email" });
+      return res.json({
+        success: false,
+        message: "Incorrect email or password",
+      });
     }
+
     const auth = await bcrypt.compare(password, user.password);
+
     if (!auth) {
-      return res.json({ message: "Incorrect password or email" });
+      return res.json({
+        success: false,
+        message: "Incorrect email or password",
+      });
     }
+
     const token = createSecretToken(user._id);
+
+    // ✅ Fix cookie settings
     res.cookie("token", token, {
       withCredentials: true,
-      httpOnly: false,
+      httpOnly: false, // ✅ Changed to false so JavaScript can read it
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: "lax",
+      path: "/",
     });
-    res
-      .status(201)
-      .json({ message: "User logged in successfully", success: true });
-    next();
+
+    console.log("✅ Token set in cookie:", token);
+
+    return res.json({
+      success: true,
+      message: "User logged in successfully",
+      token, // ✅ Also send token in response
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+      },
+    });
   } catch (error) {
     console.error(error);
+    return res.json({ success: false, message: "Internal server error" });
   }
 };

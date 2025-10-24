@@ -6,7 +6,12 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend origin
+    credentials: true, // allow cookies to be sent
+  })
+);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
