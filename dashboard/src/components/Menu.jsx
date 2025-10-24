@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const Menu = () => {
+import { FiLogOut } from "react-icons/fi";
+const Menu = ({ username, onLogout }) => {
   const [seletedMenu, setSelectedMenu] = useState(0);
   const [isProfileDropDownOpen, setIsProfileDropDownOpen] = useState(false);
 
@@ -87,9 +87,20 @@ const Menu = () => {
           </li>
         </ul>
         <hr />
-        <div className="profile">
-          <div className="avatar">ZU</div>
-          <p className="username">USERID</p>
+        <div className="flex items-center gap-4">
+          {/* Username */}
+          <span className="px-3 py-1 bg-gray-100 text-gray-800 font-medium rounded-full shadow-sm">
+            {username}
+          </span>
+
+          {/* Logout Button */}
+          <button
+            onClick={onLogout}
+            className="flex items-center px-4 py-1 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50 transition-all duration-200"
+          >
+            <FiLogOut className="mr-1 text-lg" />
+            Logout
+          </button>
         </div>
       </div>
     </div>

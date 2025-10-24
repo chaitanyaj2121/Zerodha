@@ -78,20 +78,8 @@ const Home = () => {
 
   return (
     <>
-      <TopBar />
+      <TopBar username={username} onLogout={Logout} />
       <div className="home_page">
-        <div className="flex justify-between items-center p-4 bg-white shadow-md rounded-lg m-4">
-          <h4 className="text-lg">
-            Welcome,{" "}
-            <span className="font-semibold text-blue-600">{username}</span>
-          </h4>
-          <button
-            onClick={Logout}
-            className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium shadow-sm"
-          >
-            LOGOUT
-          </button>
-        </div>
         <Dashboard />
       </div>
       <ToastContainer />
