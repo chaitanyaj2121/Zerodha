@@ -80,7 +80,7 @@ const Home = () => {
     <>
       <TopBar username={username} onLogout={Logout} />
       <div className="home_page">
-        <Dashboard />
+        <Dashboard username={username} />
       </div>
       <ToastContainer />
     </>
