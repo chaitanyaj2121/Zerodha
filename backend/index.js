@@ -3,13 +3,19 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 const uri = process.env.MONGO_URL;
+
+//for auth routes
+const { Signup, Login } = require("./controllers/AuthController");
+const { userVerification } = require("./middlewares/AuthMiddleware");
 
 const HoldingsModel = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
@@ -34,6 +40,10 @@ app.get("/allPositions", async (req, res) => {
 app.get("/", (req, res) => {
   res.send("Home Page");
 });
+
+app.post("/signup", Signup);
+app.post("/login", Login);
+app.post("/vrfy", userVerification);
 
 app.post("/newOrder", async (req, res) => {
   const newOrder = new OrdersModel({
